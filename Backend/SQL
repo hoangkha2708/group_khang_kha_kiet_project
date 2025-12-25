@@ -1,0 +1,57 @@
+-- TẠO DATABASE
+CREATE DATABASE truyxuat_nongsan;
+USE truyxuat_nongsan;
+
+-- ===== BẢNG SẢN PHẨM =====
+CREATE TABLE SanPham (
+    ma_san_pham VARCHAR(20) PRIMARY KEY,      -- Mã SP
+    ten_san_pham VARCHAR(100) NOT NULL,       -- Tên SP (Ví dụ: Xoài, Chuối…)
+    loai VARCHAR(50),                         -- Loại SP (Trái cây, Rau củ…)
+    mo_ta TEXT,                               -- Mô tả
+    anh_url TEXT                              -- Link ảnh
+);
+
+-- ===== BẢNG NÔNG TRẠI =====
+CREATE TABLE NongTrai (
+    ma_trai VARCHAR(20) PRIMARY KEY,
+    ten_trai VARCHAR(100),
+    dia_chi VARCHAR(255),
+    chu_trai VARCHAR(100),
+    chung_nhan VARCHAR(100)                   -- VietGAP, GlobalGAP…
+);
+
+-- ===== BẢNG LÔ HÀNG =====
+CREATE TABLE LoHang (
+    ma_lo VARCHAR(20) PRIMARY KEY,
+    ma_san_pham VARCHAR(20),
+    ma_trai VARCHAR(20),
+    ngay_thu_hoach DATE,
+    so_luong INT,
+    hash_block_tx VARCHAR(255),               -- Mã giao dịch blockchain
+    hash_lo_block VARCHAR(255),               -- Hash dữ liệu lô hàng
+
+    FOREIGN KEY (ma_san_pham) REFERENCES SanPham(ma_san_pham),
+    FOREIGN KEY (ma_trai) REFERENCES NongTrai(ma_trai)
+);
+
+-- ===== BẢNG CÁC BƯỚC CHUỖI CUNG ỨNG =====
+CREATE TABLE BuocCungUng (
+    ma_buoc INT AUTO_INCREMENT PRIMARY KEY,
+    ma_lo VARCHAR(20),
+    ten_buoc VARCHAR(100),                     -- Thu hoạch, Đóng gói, Vận chuyển…
+    mo_ta TEXT,
+    dia_diem VARCHAR(255),
+    thoi_gian DATETIME,
+    hash_block_tx VARCHAR(255),
+
+    FOREIGN KEY (ma_lo) REFERENCES LoHang(ma_lo)
+);
+
+-- ===== BẢNG NGƯỜI DÙNG HỆ THỐNG =====
+CREATE TABLE NguoiDung (
+    ma_nguoi_dung VARCHAR(20) PRIMARY KEY,
+    ten VARCHAR(100),
+    vai_tro VARCHAR(50),                       -- farmer, shipper, retailer…
+    khoa_cong_khai TEXT,
+    khoa_bi_mat TEXT                           -- (Không nên lưu bản rõ)
+);
